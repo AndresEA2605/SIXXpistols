@@ -317,12 +317,17 @@ export class Renderer {
     if (cosmetics.has('mourning_cloak') || cosmetics.has('standard_ribbon')) {
       const cloth = cosmetics.has('mourning_cloak') ? '#372d46' : '#56283d';
       const flutter = Math.sin(phase * 0.55) * (running ? 3 : 1.2);
-      ctx.fillStyle = cloth; ctx.strokeStyle = cosmetics.has('mourning_cloak') ? '#85749d' : '#b05b75'; ctx.lineWidth = 1;
+      ctx.fillStyle = cloth; ctx.strokeStyle = cosmetics.has('mourning_cloak') ? '#b09cc9' : '#d26b91'; ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(-6, top + 12); ctx.lineTo(-12, top + 17); ctx.lineTo(-13 - flutter, bottom - 2);
-      ctx.lineTo(-5, bottom - 8); ctx.lineTo(1, top + 22); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.moveTo(-5, top + 12); ctx.lineTo(-13, top + 15); ctx.lineTo(-17 - flutter, bottom + 1);
+      ctx.lineTo(-8 - flutter, bottom - 5); ctx.lineTo(2, top + 20); ctx.closePath(); ctx.fill(); ctx.stroke();
       if (cosmetics.has('mourning_cloak')) {
-        ctx.strokeStyle = '#9f8ab2'; ctx.beginPath(); ctx.moveTo(-10, top + 20); ctx.lineTo(-9 - flutter, bottom - 9); ctx.stroke();
+        ctx.strokeStyle = '#c6b2d8'; ctx.beginPath(); ctx.moveTo(-9, top + 20); ctx.lineTo(-12 - flutter, bottom - 10); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-13, bottom - 7); ctx.lineTo(-10, bottom - 4); ctx.lineTo(-7, bottom - 8); ctx.stroke();
+      } else {
+        // Estandarte de mano: una cinta larga y partida que ondea con cada paso.
+        ctx.strokeStyle = '#f3c2cf'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(-8, top + 18); ctx.quadraticCurveTo(-18 - flutter, top + 25, -13 - flutter, top + 38); ctx.lineTo(-17 - flutter, top + 43); ctx.stroke();
       }
     }
     const stride = running ? Math.sin(phase) * 4 : flying ? Math.sin(time * 11) * 3 : airborne ? 2 : 0;
@@ -350,13 +355,15 @@ export class Renderer {
     if (cosmetics.has('city_medal')) {
       ctx.save(); ctx.shadowColor = '#d6b76f'; ctx.shadowBlur = 7;
       ctx.strokeStyle = '#dbc17d'; ctx.fillStyle = '#756044'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(0, top + 13); ctx.lineTo(4, top + 17); ctx.lineTo(0, top + 21); ctx.lineTo(-4, top + 17); ctx.closePath(); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#f1d695'; ctx.beginPath(); ctx.arc(0, top + 17, 1.2, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      ctx.beginPath(); ctx.moveTo(0, top + 11); ctx.lineTo(6, top + 17); ctx.lineTo(0, top + 23); ctx.lineTo(-6, top + 17); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#f1d695'; ctx.beginPath(); ctx.arc(0, top + 17, 2, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#ffe8a8'; ctx.globalAlpha = .5 + Math.sin(time * 4) * .3; ctx.beginPath(); ctx.arc(0, top + 17, 8 + Math.sin(time * 4) * 2, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
     }
     if (cosmetics.has('moro_insignia')) {
-      ctx.fillStyle = '#282330'; ctx.strokeStyle = '#a59bb3'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(-7, top + 11); ctx.lineTo(-12, top + 16); ctx.lineTo(-6, top + 19); ctx.lineTo(-2, top + 14); ctx.closePath(); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle = '#d5c8e2'; ctx.beginPath(); ctx.moveTo(-9, top + 13); ctx.lineTo(-5, top + 17); ctx.moveTo(-5, top + 13); ctx.lineTo(-9, top + 17); ctx.stroke();
+      ctx.save(); ctx.fillStyle = '#282330'; ctx.strokeStyle = '#c0b2d4'; ctx.lineWidth = 1.5; ctx.shadowColor = '#ac8bc9'; ctx.shadowBlur = 7;
+      ctx.beginPath(); ctx.moveTo(-6, top + 10); ctx.lineTo(-15, top + 15); ctx.lineTo(-10, top + 23); ctx.lineTo(-2, top + 17); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = '#f0d5ff'; ctx.beginPath(); ctx.moveTo(-11, top + 14); ctx.lineTo(-7, top + 18); ctx.moveTo(-7, top + 13); ctx.lineTo(-12, top + 21); ctx.stroke();
+      ctx.fillStyle = '#e3cbf3'; ctx.fillRect(-17, top + 13, 2, 2); ctx.fillRect(-5, top + 22, 2, 2); ctx.restore();
     }
     if (flightLevel > 0) {
       ctx.fillStyle = '#342943'; ctx.strokeStyle = '#a98bd4'; ctx.lineWidth = 0.8;
@@ -387,8 +394,10 @@ export class Renderer {
     if (cosmetics.has('bell_charm')) {
       ctx.save(); ctx.shadowColor = '#9dd4da'; ctx.shadowBlur = 6;
       ctx.fillStyle = '#9fc5c4'; ctx.strokeStyle = '#d0e2d4'; ctx.lineWidth = 0.7;
-      ctx.beginPath(); ctx.moveTo(0, top - 1); ctx.lineTo(2, top + 2); ctx.lineTo(2, top + 5); ctx.lineTo(-2, top + 5); ctx.lineTo(-2, top + 2); ctx.closePath(); ctx.fill(); ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, top + 6, 1, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      const ring = 8 + ((time * 7) % 5);
+      ctx.beginPath(); ctx.moveTo(0, top - 1); ctx.lineTo(4, top + 3); ctx.lineTo(3, top + 9); ctx.lineTo(-3, top + 9); ctx.lineTo(-4, top + 3); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, top + 10, 1.5, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = .35 + (Math.sin(time * 5) + 1) * .22; ctx.beginPath(); ctx.arc(0, top + 5, ring, Math.PI * 1.12, Math.PI * 1.88); ctx.stroke(); ctx.restore();
     }
     const relicPaint = [
       ['red_sash', '#a74661'], ['blue_scarf', '#6f9eb4'], ['ash_hood', '#91839f'],
@@ -399,22 +408,59 @@ export class Renderer {
     for (const [id, tint] of relicPaint) {
       ctx.save(); ctx.strokeStyle = tint; ctx.fillStyle = tint; ctx.lineWidth = 1.4;
       ctx.shadowColor = tint; ctx.shadowBlur = id === 'sixfold_charm' ? 8 : 3;
-      if (id === 'red_sash' || id === 'blue_scarf') {
-        ctx.beginPath(); ctx.moveTo(-4, top + 14); ctx.quadraticCurveTo(-11, top + 19, -8, top + 28); ctx.lineTo(-4, top + 24); ctx.stroke();
+      if (id === 'red_sash') {
+        // Fajín cruzado de hombro a cintura con dos colas que se agitan.
+        const sway = Math.sin(phase + time * 3) * (running ? 2 : 0.7);
+        ctx.lineWidth = 4; ctx.strokeStyle = '#4e1e31';
+        ctx.beginPath(); ctx.moveTo(-5, top + 12); ctx.lineTo(5, top + 24); ctx.stroke();
+        ctx.strokeStyle = '#d76b88'; ctx.lineWidth = 2.6;
+        ctx.beginPath(); ctx.moveTo(-5, top + 12); ctx.lineTo(5, top + 24); ctx.stroke();
+        ctx.fillStyle = '#b94667'; ctx.beginPath(); ctx.moveTo(4, top + 22); ctx.lineTo(8 + sway, top + 37); ctx.lineTo(3 + sway, top + 34); ctx.lineTo(0, top + 24); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#edb2c1'; ctx.fillRect(-3, top + 15, 2, 2); ctx.fillRect(2, top + 21, 2, 2);
+      } else if (id === 'blue_scarf') {
+        const sway = Math.sin(time * 7 + phase) * 2;
+        ctx.fillStyle = '#386c89'; ctx.strokeStyle = '#a9e1ed'; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.moveTo(-6, top + 9); ctx.quadraticCurveTo(0, top + 15, 7, top + 9); ctx.lineTo(6, top + 15); ctx.quadraticCurveTo(0, top + 19, -6, top + 15); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(4, top + 14); ctx.lineTo(8 + sway, top + 30); ctx.lineTo(4 + sway, top + 34); ctx.lineTo(1, top + 16); ctx.closePath(); ctx.fill(); ctx.stroke();
       } else if (id === 'ash_hood') {
-        ctx.beginPath(); ctx.moveTo(-7, top + 9); ctx.quadraticCurveTo(-8, top - 5, 0, top - 4); ctx.quadraticCurveTo(8, top - 5, 7, top + 9); ctx.stroke();
+        ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-8, top + 11); ctx.lineTo(-9, top + 1); ctx.quadraticCurveTo(-8, top - 8, 0, top - 7); ctx.quadraticCurveTo(9, top - 8, 8, top + 1); ctx.lineTo(8, top + 11); ctx.stroke();
+        ctx.fillStyle = '#51465d'; ctx.beginPath(); ctx.moveTo(-8, top + 3); ctx.quadraticCurveTo(0, top - 8, 8, top + 3); ctx.lineTo(6, top + 7); ctx.lineTo(-6, top + 7); ctx.closePath(); ctx.fill();
       } else if (id === 'iron_pauldron') {
-        ctx.beginPath(); ctx.moveTo(-7, top + 12); ctx.lineTo(-12, top + 14); ctx.lineTo(-10, top + 20); ctx.lineTo(-5, top + 18); ctx.closePath(); ctx.fill();
-      } else if (id === 'cinder_crown' || id === 'blackgate_feather') {
-        ctx.beginPath(); ctx.moveTo(-3, top + 1); ctx.lineTo(-5, top - 7); ctx.lineTo(0, top - 3); ctx.lineTo(5, top - 8); ctx.lineTo(3, top + 1); ctx.stroke();
+        ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-6, top + 11); ctx.lineTo(-13, top + 12); ctx.lineTo(-15, top + 17); ctx.lineTo(-12, top + 22); ctx.lineTo(-5, top + 20); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle = '#dce0ed'; ctx.beginPath(); ctx.moveTo(-12, top + 14); ctx.lineTo(-7, top + 18); ctx.lineTo(-12, top + 20); ctx.stroke();
+      } else if (id === 'cinder_crown') {
+        ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-7, top + 2); ctx.lineTo(-8, top - 6); ctx.lineTo(-3, top - 2); ctx.lineTo(0, top - 9); ctx.lineTo(3, top - 2); ctx.lineTo(8, top - 6); ctx.lineTo(7, top + 2); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#ffd39a'; ctx.shadowBlur = 9; ctx.fillRect(-1, top - 5, 2, 2);
+      } else if (id === 'blackgate_feather') {
+        const sway = Math.sin(time * 5 + phase) * 1.5;
+        ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(2, top + 2); ctx.quadraticCurveTo(12 + sway, top - 5, 5 + sway, top - 19); ctx.stroke();
+        ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(5 + sway, top - 17); ctx.lineTo(0, top - 12); ctx.moveTo(6 + sway, top - 14); ctx.lineTo(11, top - 11); ctx.moveTo(7 + sway, top - 10); ctx.lineTo(2, top - 6); ctx.stroke();
       } else if (id === 'moro_halfmask') {
-        ctx.fillRect(-5, top + 5, 10, 4); ctx.fillStyle = '#18171c'; ctx.fillRect(-1, top + 6, 2, 1);
-      } else if (id === 'bellkeeper_chain' || id === 'wall_knot') {
-        ctx.beginPath(); ctx.arc(0, top + 17, 3, 0, Math.PI * 2); ctx.stroke();
+        ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-7, top + 4); ctx.lineTo(-5, top + 10); ctx.lineTo(5, top + 10); ctx.lineTo(7, top + 4); ctx.lineTo(3, top + 3); ctx.lineTo(0, top + 6); ctx.lineTo(-3, top + 3); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#f0b0d1'; ctx.fillRect(-4, top + 5, 2, 1); ctx.fillRect(3, top + 5, 2, 1);
+      } else if (id === 'bellkeeper_chain') {
+        const ring = 3 + Math.sin(time * 5) * .5;
+        ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-5, top + 12); ctx.quadraticCurveTo(0, top + 19, 5, top + 12); ctx.stroke();
+        ctx.fillStyle = '#d8d1e2'; ctx.beginPath(); ctx.moveTo(0, top + 16); ctx.lineTo(4, top + 21); ctx.lineTo(3, top + 25); ctx.lineTo(-3, top + 25); ctx.lineTo(-4, top + 21); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.strokeStyle = tint; ctx.globalAlpha = .55; ctx.beginPath(); ctx.arc(0, top + 22, ring, -.7, .7); ctx.stroke();
+      } else if (id === 'wall_knot') {
+        ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-5, top + 13); ctx.bezierCurveTo(-12, top + 9, -12, top + 23, 0, top + 20); ctx.bezierCurveTo(12, top + 23, 12, top + 9, 5, top + 13); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, top + 19); ctx.lineTo(-3, top + 27); ctx.moveTo(1, top + 19); ctx.lineTo(5, top + 25); ctx.stroke();
       } else if (id === 'field_medic_badge') {
-        ctx.fillRect(-1, top + 14, 2, 7); ctx.fillRect(-3.5, top + 16.5, 7, 2);
+        ctx.fillStyle = '#e3eee0'; ctx.shadowBlur = 10; ctx.beginPath(); ctx.arc(-4, top + 16, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#628b72'; ctx.fillRect(-5, top + 12, 2, 8); ctx.fillRect(-8, top + 15, 8, 2);
+      } else if (id === 'sixfold_charm') {
+        const orbit = time * 2.8;
+        ctx.strokeStyle = '#c4a1e6'; ctx.globalAlpha = .65; ctx.beginPath(); ctx.ellipse(0, top + 15, 12, 17, Math.sin(time * 1.5) * .15, 0, Math.PI * 2); ctx.stroke();
+        ctx.globalAlpha = 1; ctx.fillStyle = '#eadbff'; ctx.shadowBlur = 9;
+        for (let mark = 0; mark < 6; mark += 1) {
+          const angle = orbit + mark * Math.PI / 3;
+          ctx.beginPath(); ctx.arc(Math.cos(angle) * 12, top + 15 + Math.sin(angle) * 17, 1.8, 0, Math.PI * 2); ctx.fill();
+        }
       } else {
-        ctx.beginPath(); ctx.moveTo(0, top + 12); ctx.lineTo(4, top + 17); ctx.lineTo(0, top + 22); ctx.lineTo(-4, top + 17); ctx.closePath(); ctx.stroke();
+        ctx.strokeStyle = '#e6d5a9'; ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.moveTo(0, top + 12); ctx.lineTo(5, top + 16); ctx.lineTo(0, top + 22); ctx.lineTo(-5, top + 16); ctx.closePath(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-3, top + 16); ctx.lineTo(3, top + 16); ctx.moveTo(0, top + 13); ctx.lineTo(0, top + 20); ctx.stroke();
       }
       ctx.restore();
     }

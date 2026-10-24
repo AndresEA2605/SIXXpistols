@@ -229,7 +229,7 @@ export class HUD {
     if (previewEquip && relic && !player.equippedWarCosmetics.includes(relic.id)) player.equippedWarCosmetics.push(relic.id);
     renderer.ctx = ctx;
     ctx.save(); ctx.scale(3, 3);
-    renderer.drawPlayer(player, 0);
+    renderer.drawPlayer(player, performance.now() / 1000);
     ctx.restore();
     renderer.ctx = previousContext;
   }
