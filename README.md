@@ -9,6 +9,7 @@ Roguelike de acción y plataformas 2D sobre Ardan, un guerrero de seis brazos qu
 - **Mejoras**: Encuentra corazones, placas de vitalidad, esquirlas de daño, grebas de velocidad y núcleos propulsores que amplían y aceleran el vuelo. Las mejoras también alteran físicamente la armadura de Ardan.
 - **Salas consistentes y enemigos variables**: La ruta tiene 17 salas: introducción, combates, cinco guardianes y Moro. Los escenarios mantienen sus diseños, mientras que varían la cantidad, el tipo y la posición de los enemigos.
 - **Exploración**: 17 salas conectadas con plataformas colocadas a mano. Las cinco salas de guardián culminan cada tramo de progresión y entregan un brazo elemental.
+- **Lore y reliquias**: Cada sala representa un lugar de la guerra de 1878. Encuentra cinco adornos cosméticos únicos que cuentan historias de los defensores y cambian la apariencia de Ardan.
 - **Combate**: Grunts, crawlers, cargadores, tiradores, voladores y Moro. Cada brazo añade un estilo de ataque y una habilidad propia.
 - **Curación**: H restaura 1 punto con una carga inicial. Cada seis impactos recarga una carga; la Esencia Vital aumenta la curación y las cargas disponibles.
 - **Acción y plataformas**: Salto con tolerancia al borde, dash con invulnerabilidad, ataques, poderes elementales, esquiva de proyectiles y mejoras permanentes para la partida.
@@ -20,26 +21,33 @@ Roguelike de acción y plataformas 2D sobre Ardan, un guerrero de seis brazos qu
 | Mover | `A` / `D` o `←` / `→` | Botones ◀ / ▶ |
 | Mirar arriba / golpe vertical | `W` / `↑` + atacar | Botón ⌃ + ataque |
 | Saltar | `Espacio` | Botón ▲ |
-| Atacar | `J` o `X` | Botón ⚔ |
+| Golpe básico | `X` | Botón ⚔ |
 | Dash | `K` o `Shift` | Botón » |
 | Cura pequeña | `H` | Botón ♥ |
-| Habilidad del brazo | `L` o `C` | Botón ✦ |
-| Cambiar brazo | `Q` o `Tab` | Botón ↻ |
+| Habilidad del brazo | `C` | Botón ✦ |
+| Abrir/cerrar inventario | `E` | Botón ☷ |
 | Pausa | `ESC` o `P` | — |
 | Silenciar | `M` | — |
 
-## Cómo Ejecutar
+## Ejecutar y empaquetar
 
-Abrir `index.html` con un servidor local (requerido por ES Modules).
+El juego no usa dependencias de terceros ni un proceso de compilación pesado. Para probarlo localmente, sirve los módulos desde un servidor HTTP:
 
 ```bash
-# Con Python
-python -m http.server 8000
-# O con Node
-npx serve .
+npm run dev
 ```
 
-Luego abrir `http://localhost:8000`
+Abre `http://localhost:8000`. Para generar el paquete publicable en `dist/`:
+
+```bash
+npm run build
+```
+
+## Publicación automática en GitHub Pages
+
+El workflow `.github/workflows/deploy-pages.yml` empaqueta y publica el juego cada vez que se sube un commit a `main`. Para activarlo una sola vez, entra en **Settings → Pages** del repositorio y selecciona **GitHub Actions** como fuente de publicación. Después, cada `git push origin main` actualizará el sitio.
+
+La dirección del proyecto será `https://andreseA2605.github.io/SIXXpistols/` cuando termine la primera publicación. También puedes iniciar una publicación manual desde **Actions → Build and deploy game to GitHub Pages → Run workflow**.
 
 ## Estructura
 
