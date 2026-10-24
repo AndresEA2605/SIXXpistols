@@ -109,23 +109,25 @@ export class GameManager {
 
   buildChallenge() {
     const w = 1180, h = 576;
-    this.solids.push(new Solid(0, h - 48, 320, 48));
-    this.solids.push(new Solid(420, h - 48, 760, 48));
-    // plataformas en escalera
-    this.solids.push(new Solid(200, h - 130, 80, 10));
-    this.solids.push(new Solid(320, h - 200, 90, 10));
-    this.solids.push(new Solid(480, h - 160, 90, 10));
-    this.solids.push(new Solid(620, h - 230, 110, 10));
-    this.solids.push(new Solid(820, h - 170, 100, 10));
-    this.solids.push(new Solid(980, h - 240, 90, 10));
+    this.solids.push(new Solid(0, h - 48, 240, 48));
+    this.solids.push(new Solid(380, h - 48, 800, 48));
+    // plataformas en escalera más exigentes
+    this.solids.push(new Solid(250, h - 120, 60, 10));
+    this.solids.push(new Solid(200, h - 190, 60, 10));
+    this.solids.push(new Solid(320, h - 250, 70, 10));
+    this.solids.push(new Solid(480, h - 210, 70, 10));
+    this.solids.push(new Solid(620, h - 290, 80, 10));
+    this.solids.push(new Solid(800, h - 240, 80, 10));
+    this.solids.push(new Solid(980, h - 320, 70, 10));
     // laterales
     this.solids.push(new Solid(-16, 0, 16, h));
     this.solids.push(new Solid(w, 0, 16, h));
 
-    this.player.reset(48, h - 48 - 30);
+    this.player.reset(40, h - 48 - 30);
     this.enemies.push(new Grunt(520, h - 48 - 24));
     this.enemies.push(new Charger(760, h - 48 - 26));
-    this.enemies.push(new Grunt(940, h - 240 - 24));
+    this.enemies.push(new Grunt(920, h - 48 - 24));
+    this.enemies.push(new Charger(1040, h - 320 - 26));
     this.door = { x: w - 72, y: h - 48 - 56, w: 32, h: 56, open: false, next: 2 };
     this.enemiesLeft = this.enemies.filter((e) => !e.dead).length;
   }
