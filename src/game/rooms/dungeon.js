@@ -37,7 +37,7 @@ export class Dungeon {
     this.collectedFists = [];
   }
 
-  generateDungeon() {
+  generateDungeon(unlockedCosmetics = []) {
     this.rooms = [];
     this.collectedFists = [];
     const fistOrder = shuffled(FISTS);
@@ -64,9 +64,11 @@ export class Dungeon {
       const relicForRoom = { 2: 0, 5: 1, 8: 2, 11: 3, 14: 4 }[index];
       if (relicForRoom !== undefined) {
         const relic = WAR_RELICS[relicForRoom];
-        const position = this.generator.randomLootPosition(width, height, room.platforms,
-          [...room.enemies, ...room.items], false, 18);
-        room.items.push({ ...position, w: 18, h: 18, type: 'cosmetic', cosmeticId: relic.id, collected: false });
+        if (!unlockedCosmetics.includes(relic.id)) {
+          const position = this.generator.randomLootPosition(width, height, room.platforms,
+            [...room.enemies, ...room.items], false, 18);
+          room.items.push({ ...position, w: 18, h: 18, type: 'cosmetic', cosmeticId: relic.id, collected: false });
+        }
       }
 
       if (stage.type === 'guardian') {

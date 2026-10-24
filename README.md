@@ -26,8 +26,10 @@ Roguelike de acción y plataformas 2D sobre Ardan, un guerrero de seis brazos qu
 | Cura pequeña | `H` | Botón ♥ |
 | Habilidad del brazo | `C` | Botón ✦ |
 | Abrir/cerrar inventario | `E` | Botón ☷ |
-| Pausa | `ESC` o `P` | — |
+| Pausa | `ESC` o `P` | Botón Ⅱ en la esquina superior |
 | Silenciar | `M` | — |
+
+Desde la pausa puedes reanudar, reiniciar la partida o salir al menú. La pestaña **Vestuario** del inventario muestra los adornos desbloqueados y los guarda en este navegador entre partidas.
 
 ## Ejecutar y empaquetar
 

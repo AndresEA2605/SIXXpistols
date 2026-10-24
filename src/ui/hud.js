@@ -1,3 +1,5 @@
+import { WAR_RELICS } from '../game/rooms/warLore.js';
+
 export class HUD {
   constructor(root) {
     this.root = root;
@@ -22,14 +24,38 @@ export class HUD {
     this.inventoryEl = root.ownerDocument.querySelector('[data-fist-inventory]');
     this.inventorySlotsEl = this.inventoryEl?.querySelector('[data-fist-slots]');
     this.inventoryHintEl = this.inventoryEl?.querySelector('[data-fist-inventory-hint]');
+    this.cosmeticSlotsEl = this.inventoryEl?.querySelector('[data-cosmetic-slots]');
+    this.cosmeticHintEl = this.inventoryEl?.querySelector('[data-cosmetic-hint]');
+    this.cosmeticCountEl = this.inventoryEl?.querySelector('[data-cosmetic-count]');
     this.inventorySignature = '';
+    this.cosmeticSignature = '';
+    this.inventoryTab = 'arms';
     this.gameManager = null;
     this.inventoryEl?.addEventListener('click', (event) => {
+      const tab = event.target.closest('[data-inventory-tab]');
+      if (tab) {
+        this.setInventoryTab(tab.dataset.inventoryTab);
+        return;
+      }
       const button = event.target.closest('[data-fist-select]');
-      if (!button || !this.gameManager) return;
-      this.gameManager.player.fistManager.toggleFist(Number(button.dataset.fistSelect));
-      this.updateInventory(this.gameManager);
+      if (button && this.gameManager) {
+        this.gameManager.player.fistManager.toggleFist(Number(button.dataset.fistSelect));
+        this.updateInventory(this.gameManager);
+        return;
+      }
+      const cosmetic = event.target.closest('[data-cosmetic-select]');
+      if (cosmetic && this.gameManager) {
+        const player = this.gameManager.player;
+        const id = cosmetic.dataset.cosmeticSelect;
+        if (!player.collectedWarCosmetics.includes(id)) return;
+        const index = player.equippedWarCosmetics.indexOf(id);
+        if (index >= 0) player.equippedWarCosmetics.splice(index, 1);
+        else player.equippedWarCosmetics.push(id);
+        try { localStorage.setItem('sixxpistols-equipped-cosmetics', JSON.stringify(player.equippedWarCosmetics)); } catch {}
+        this.updateInventory(this.gameManager);
+      }
     });
+    this.setInventoryTab('arms');
   }
 
   update(gm) {
@@ -101,6 +127,7 @@ export class HUD {
   updateInventory(gm) {
     if (!this.inventorySlotsEl || !gm?.player?.fistManager) return;
     const manager = gm.player.fistManager;
+    const player = gm.player;
     const activeCount = manager.getActiveFists().length;
     if (this.inventoryHintEl) {
       this.inventoryHintEl.textContent = activeCount === 2
@@ -123,6 +150,48 @@ export class HUD {
       button.setAttribute('aria-pressed', String(equipped));
       const slot = manager.activeIds.indexOf(id);
       button.querySelector('i').textContent = slot >= 0 ? String(slot + 1) : '';
+    });
+
+    const cosmeticSignature = WAR_RELICS.map((relic) => relic.id).join(',');
+    if (this.cosmeticSlotsEl && cosmeticSignature !== this.cosmeticSignature) {
+      this.cosmeticSignature = cosmeticSignature;
+      this.cosmeticSlotsEl.innerHTML = WAR_RELICS.map((relic) => `
+        <button class="fist-inventory-cosmetic is-locked" type="button" data-cosmetic-select="${relic.id}" title="${relic.description}" aria-label="${relic.name}" disabled>
+          <span class="fist-inventory-cosmetic__glyph" style="--cosmetic-color:${relic.color}">${relic.glyph}</span>
+          <b>${relic.name}</b>
+          <small data-cosmetic-state></small>
+        </button>`).join('');
+    }
+    const owned = player.collectedWarCosmetics || [];
+    const equipped = player.equippedWarCosmetics || [];
+    if (this.cosmeticCountEl) this.cosmeticCountEl.textContent = `${owned.length}/${WAR_RELICS.length}`;
+    if (this.cosmeticHintEl) {
+      this.cosmeticHintEl.textContent = owned.length
+        ? 'SELECCIONA UNA PIEZA PARA EQUIPARLA O QUITARLA · SE GUARDA ENTRE PARTIDAS'
+        : 'ENCUENTRA RELIQUIAS DE GUERRA PARA DESBLOQUEAR ADORNOS';
+    }
+    this.cosmeticSlotsEl?.querySelectorAll('[data-cosmetic-select]').forEach((button) => {
+      const id = button.dataset.cosmeticSelect;
+      const isOwned = owned.includes(id);
+      const isEquipped = equipped.includes(id);
+      button.disabled = !isOwned;
+      button.classList.toggle('is-locked', !isOwned);
+      button.classList.toggle('is-equipped', isEquipped);
+      button.setAttribute('aria-pressed', String(isEquipped));
+      const state = button.querySelector('[data-cosmetic-state]');
+      if (state) state.textContent = isEquipped ? 'EQUIPADO' : isOwned ? 'ENCONTRADO' : 'POR DESCUBRIR';
+    });
+  }
+
+  setInventoryTab(tab) {
+    this.inventoryTab = tab === 'cosmetics' ? 'cosmetics' : 'arms';
+    this.inventoryEl?.querySelectorAll('[data-inventory-tab]').forEach((button) => {
+      const active = button.dataset.inventoryTab === this.inventoryTab;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-selected', String(active));
+    });
+    this.inventoryEl?.querySelectorAll('[data-inventory-view]').forEach((view) => {
+      view.classList.toggle('hidden', view.dataset.inventoryView !== this.inventoryTab);
     });
   }
 }

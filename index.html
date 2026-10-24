@@ -27,6 +27,7 @@
         <div class="hud__stat"><span>CURA [H]</span><b data-heal-status>1/1</b></div>
         <div class="hud__heal-track"><i data-heal-fill></i></div>
       </div>
+      <button id="btn-pause-toggle" class="hud__pause-toggle" type="button" aria-label="Pausar juego" title="Pausar">Ⅱ</button>
       <div class="hud__top">
         <div class="hud__group hud__group--center">
           <div class="hud__label">ARDAN · 1878</div>
@@ -64,9 +65,20 @@
           </div>
           <button id="btn-inventory-close" class="fist-inventory-close" type="button" aria-label="Cerrar inventario">×</button>
         </header>
-        <p class="fist-inventory-copy">Elige dos brazos. Sus golpes y poderes se combinan.</p>
-        <div class="hud__inventory-arms" data-fist-slots></div>
-        <footer class="hud__inventory-hint" data-fist-inventory-hint>ELIGE HASTA DOS BRAZOS</footer>
+        <nav class="fist-inventory-tabs" role="tablist" aria-label="Inventario de Ardan">
+          <button class="fist-inventory-tab is-active" type="button" role="tab" aria-selected="true" data-inventory-tab="arms">BRAZOS</button>
+          <button class="fist-inventory-tab" type="button" role="tab" aria-selected="false" data-inventory-tab="cosmetics">VESTUARIO <span data-cosmetic-count>0/5</span></button>
+        </nav>
+        <section class="fist-inventory-view" data-inventory-view="arms" role="tabpanel">
+          <p class="fist-inventory-copy">Elige dos brazos. Sus golpes y poderes se combinan.</p>
+          <div class="hud__inventory-arms" data-fist-slots></div>
+          <footer class="hud__inventory-hint" data-fist-inventory-hint>ELIGE HASTA DOS BRAZOS</footer>
+        </section>
+        <section class="fist-inventory-view hidden" data-inventory-view="cosmetics" role="tabpanel">
+          <p class="fist-inventory-copy">Los recuerdos encontrados permanecen entre partidas. Selecciona los adornos que llevará Ardan.</p>
+          <div class="fist-inventory-cosmetics" data-cosmetic-slots></div>
+          <footer class="hud__inventory-hint" data-cosmetic-hint>ENCUENTRA RELIQUIAS EN LAS SALAS</footer>
+        </section>
         <div class="fist-inventory-footnote">E · CERRAR INVENTARIO</div>
       </section>
     </div>
@@ -202,8 +214,10 @@
         </div>
         <div class="menu">
           <button class="menu__btn menu__btn--primary" id="btn-resume">REANUDAR</button>
+          <button class="menu__btn" id="btn-pause-retry">REINICIAR PARTIDA</button>
+          <button class="menu__btn" id="btn-pause-menu">SALIR AL MENÚ</button>
         </div>
-        <div class="screen__footer">ESC / P PARA CONTINUAR</div>
+        <div class="screen__footer">ESC / P PARA REANUDAR · ELIGE UNA OPCIÓN</div>
       </div>
     </div>
 

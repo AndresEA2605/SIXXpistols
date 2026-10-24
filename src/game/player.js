@@ -1,6 +1,18 @@
 import { Entity } from './entities.js';
 import { clamp } from '../core/math.js';
 import { FistManager } from './fists/fistManager.js';
+import { WAR_RELICS } from './rooms/warLore.js';
+
+const validRelicIds = new Set(WAR_RELICS.map((relic) => relic.id));
+
+function readSavedCosmetics(key) {
+  try {
+    const parsed = JSON.parse(globalThis.localStorage?.getItem(key) || '[]');
+    return Array.isArray(parsed) ? [...new Set(parsed.filter((id) => validRelicIds.has(id)))] : [];
+  } catch {
+    return [];
+  }
+}
 
 export class Player extends Entity {
   constructor(x, y) {
@@ -67,7 +79,9 @@ export class Player extends Entity {
     this.reachLevel = 0;
     this.focusLevel = 0;
     this.dashLevel = 0;
-    this.warCosmetics = [];
+    this.collectedWarCosmetics = readSavedCosmetics('sixxpistols-collected-cosmetics');
+    this.equippedWarCosmetics = readSavedCosmetics('sixxpistols-equipped-cosmetics')
+      .filter((id) => this.collectedWarCosmetics.includes(id));
     this.armorLevel = 0;
     this.healLevel = 0;
     this.healAmount = 1;

@@ -40,6 +40,12 @@ export class Screens {
     const btnResume = doc.getElementById('btn-resume');
     if (btnResume) btnResume.onclick = () => { if (this.onResume) this.onResume(); };
 
+    const btnPauseRetry = doc.getElementById('btn-pause-retry');
+    if (btnPauseRetry) btnPauseRetry.onclick = () => { if (this.onRetry) this.onRetry(); };
+
+    const btnPauseMenu = doc.getElementById('btn-pause-menu');
+    if (btnPauseMenu) btnPauseMenu.onclick = () => { if (this.onMenu) this.onMenu(); };
+
     const btnFistContinue = doc.getElementById('btn-fist-continue');
     if (btnFistContinue) btnFistContinue.onclick = () => {
       if (this.pickupKind === 'item') {

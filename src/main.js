@@ -89,6 +89,12 @@ function closeFistInventory() {
 }
 
 document.getElementById('btn-inventory-close')?.addEventListener('click', closeFistInventory);
+document.getElementById('btn-pause-toggle')?.addEventListener('click', () => {
+  if (gm.state !== 'playing') return;
+  gm.state = 'paused';
+  acc = 0;
+  screens.showPause();
+});
 
 screens.onFistPickupContinue = () => {
   try { audio.play('click'); } catch(e) {}

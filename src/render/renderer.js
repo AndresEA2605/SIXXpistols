@@ -241,7 +241,7 @@ export class Renderer {
     const flightFist = activeFists.find((arm) => arm.ability.type === 'flight');
     const color = fist?.color || '#b8b7c4';
     const collected = player.fistManager?.collected || [];
-    const cosmetics = new Set(player.warCosmetics || []);
+    const cosmetics = new Set(player.equippedWarCosmetics || []);
     const ctx = this.ctx;
     const cx = x + w / 2;
     const phase = (player.animTimer || time) * (player.anim === 'run' ? 13 : 6);
