@@ -13,7 +13,7 @@ const audio = new AudioManager();
 const camera = new Camera(canvas.width, canvas.height);
 const gm = new GameManager();
 const renderer = new Renderer(canvas);
-const hud = new HUD(document.getElementById('hud'));
+const hud = new HUD(document.getElementById('hud'), renderer);
 const screens = new Screens(document);
 
 const touchContainer = document.getElementById('touch-controls');

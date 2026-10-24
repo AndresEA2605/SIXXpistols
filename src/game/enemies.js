@@ -427,7 +427,7 @@ export class Crawler extends Enemy {
 export class Moro extends Enemy {
   constructor(x, y) {
     super(x, y, 'boss');
-    this.w = 54; this.h = 76;
+    this.w = 70; this.h = 92;
     this.chaseRange = 700; this.attackRange = 220;
     this.damage = 2; this.shootCooldown = 1.95; this.shootTimer = 0.9;
     this.hp = 32; this.maxHp = 32; this.speed = 118;
@@ -548,8 +548,8 @@ export class Boss extends Enemy {
 export class Guardian extends Boss {
   constructor(x, y, rank = 1) {
     super(x, y);
-    this.w = 52;
-    this.h = 64;
+    this.w = 64;
+    this.h = 78;
     this.guardianRank = rank;
     this.displayName = `GUARDIÁN ${rank}`;
     this.maxHp = 12 + rank * 4;

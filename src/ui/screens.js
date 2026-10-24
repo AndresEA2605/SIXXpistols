@@ -171,7 +171,7 @@ export class Screens {
       key: `item-${item.type}-${item.x}`,
       label: relic ? 'RECUERDO DE LA GUERRA' : 'RELIQUIA DESCUBIERTA',
       name: reward.name,
-      element: relic ? 'ORNAMENTO COSMÉTICO' : 'MEJORA PERMANENTE',
+      element: relic ? `ORNAMENTO · ${['', 'COMÚN', 'POCO COMÚN', 'RARO', 'ÉPICO', 'LEGENDARIO'][relic.rarity]}` : 'MEJORA PERMANENTE',
       description: reward.description,
       primary: reward.effect,
       ability: relic ? 'UNA MARCA DE LOS DEFENSORES DE LA CIUDAD.' : 'EL HALLAZGO SE HA AÑADIDO A TU PARTIDA.',

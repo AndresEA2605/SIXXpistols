@@ -390,6 +390,34 @@ export class Renderer {
       ctx.beginPath(); ctx.moveTo(0, top - 1); ctx.lineTo(2, top + 2); ctx.lineTo(2, top + 5); ctx.lineTo(-2, top + 5); ctx.lineTo(-2, top + 2); ctx.closePath(); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.arc(0, top + 6, 1, 0, Math.PI * 2); ctx.fill(); ctx.restore();
     }
+    const relicPaint = [
+      ['red_sash', '#a74661'], ['blue_scarf', '#6f9eb4'], ['ash_hood', '#91839f'],
+      ['iron_pauldron', '#8691ad'], ['cinder_crown', '#bd806b'], ['moro_halfmask', '#9385a7'],
+      ['bellkeeper_chain', '#a9a2be'], ['field_medic_badge', '#8eaa91'], ['blackgate_feather', '#8e77b4'],
+      ['sixfold_charm', '#c4a1e6'], ['wall_knot', '#8e758a'],
+    ].filter(([id]) => cosmetics.has(id));
+    for (const [id, tint] of relicPaint) {
+      ctx.save(); ctx.strokeStyle = tint; ctx.fillStyle = tint; ctx.lineWidth = 1.4;
+      ctx.shadowColor = tint; ctx.shadowBlur = id === 'sixfold_charm' ? 8 : 3;
+      if (id === 'red_sash' || id === 'blue_scarf') {
+        ctx.beginPath(); ctx.moveTo(-4, top + 14); ctx.quadraticCurveTo(-11, top + 19, -8, top + 28); ctx.lineTo(-4, top + 24); ctx.stroke();
+      } else if (id === 'ash_hood') {
+        ctx.beginPath(); ctx.moveTo(-7, top + 9); ctx.quadraticCurveTo(-8, top - 5, 0, top - 4); ctx.quadraticCurveTo(8, top - 5, 7, top + 9); ctx.stroke();
+      } else if (id === 'iron_pauldron') {
+        ctx.beginPath(); ctx.moveTo(-7, top + 12); ctx.lineTo(-12, top + 14); ctx.lineTo(-10, top + 20); ctx.lineTo(-5, top + 18); ctx.closePath(); ctx.fill();
+      } else if (id === 'cinder_crown' || id === 'blackgate_feather') {
+        ctx.beginPath(); ctx.moveTo(-3, top + 1); ctx.lineTo(-5, top - 7); ctx.lineTo(0, top - 3); ctx.lineTo(5, top - 8); ctx.lineTo(3, top + 1); ctx.stroke();
+      } else if (id === 'moro_halfmask') {
+        ctx.fillRect(-5, top + 5, 10, 4); ctx.fillStyle = '#18171c'; ctx.fillRect(-1, top + 6, 2, 1);
+      } else if (id === 'bellkeeper_chain' || id === 'wall_knot') {
+        ctx.beginPath(); ctx.arc(0, top + 17, 3, 0, Math.PI * 2); ctx.stroke();
+      } else if (id === 'field_medic_badge') {
+        ctx.fillRect(-1, top + 14, 2, 7); ctx.fillRect(-3.5, top + 16.5, 7, 2);
+      } else {
+        ctx.beginPath(); ctx.moveTo(0, top + 12); ctx.lineTo(4, top + 17); ctx.lineTo(0, top + 22); ctx.lineTo(-4, top + 17); ctx.closePath(); ctx.stroke();
+      }
+      ctx.restore();
+    }
     ctx.restore();
 
     // Los brazos nacen del hombro. El activo acompaña la pose y no orbita como un objeto suelto.
@@ -842,14 +870,49 @@ export class Renderer {
     const base = hitFlash > 0 ? '#ffffff' : '#9c9c9c';
     
     if (enemy.enemyType === 'boss') {
-      this.rect(x, y + 8, w, h - 8, base);
-      this.rect(x + 4, y, w - 8, 14, hitFlash > 0 ? '#ffffff' : '#b5b5b5');
-      this.rect(x + 10, y + 4, 4, 4, '#1a1a1a');
-      this.rect(x + w - 14, y + 4, 4, 4, '#1a1a1a');
+      const ctx = this.ctx;
+      const moro = enemy.displayName === 'MORO, EL DESTRUCTOR' || !enemy.guardianRank;
+      const armor = hitFlash > 0 ? '#fff' : moro ? '#332b42' : '#403747';
+      const metal = hitFlash > 0 ? '#fff' : moro ? '#a889bd' : '#b39a83';
+      const glow = moro ? '#d675b6' : '#d6a76e';
+      const facing = enemy.facing || 1;
+      const phase = enemy.phase || 1;
+      ctx.save();
+      ctx.shadowColor = glow; ctx.shadowBlur = phase === 2 ? 16 : 7;
+      ctx.fillStyle = moro ? '#19151f' : '#211c24'; ctx.strokeStyle = metal; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x + w * .25, y + h * .33); ctx.lineTo(x - 7, y + h - 1); ctx.lineTo(x + w * .46, y + h * .79); ctx.lineTo(x + w * .76, y + h); ctx.lineTo(x + w * .77, y + h * .32); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = armor; ctx.strokeStyle = metal;
+      ctx.beginPath(); ctx.moveTo(x + w * .27, y + h * .2); ctx.lineTo(x + w * .73, y + h * .2); ctx.lineTo(x + w * .87, y + h * .7); ctx.lineTo(x + w * .73, y + h * .93); ctx.lineTo(x + w * .27, y + h * .93); ctx.lineTo(x + w * .13, y + h * .7); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = metal;
+      for (const side of [-1, 1]) {
+        const sx = x + w * (side < 0 ? .18 : .82);
+        ctx.beginPath(); ctx.moveTo(sx, y + h * .27); ctx.lineTo(sx + side * 9, y + h * .18); ctx.lineTo(sx + side * 12, y + h * .42); ctx.lineTo(sx, y + h * .48); ctx.closePath(); ctx.fill();
+      }
+      ctx.fillStyle = armor; ctx.strokeStyle = metal; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x + w * .2, y + h * .27); ctx.lineTo(x + w * .28, y + h * .04); ctx.lineTo(x + w * .5, y - 2); ctx.lineTo(x + w * .72, y + h * .04); ctx.lineTo(x + w * .8, y + h * .27); ctx.lineTo(x + w * .68, y + h * .38); ctx.lineTo(x + w * .32, y + h * .38); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#130f19'; ctx.fillRect(x + w * .27, y + h * .17, w * .46, h * .065);
+      ctx.fillStyle = glow; ctx.shadowBlur = 12; ctx.fillRect(x + (facing > 0 ? w * .53 : w * .31), y + h * .18, w * .16, Math.max(2, h * .035));
+      ctx.fillStyle = metal; ctx.beginPath(); ctx.moveTo(x + w * .5, y + h * .43); ctx.lineTo(x + w * .63, y + h * .58); ctx.lineTo(x + w * .5, y + h * .75); ctx.lineTo(x + w * .37, y + h * .58); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(x + w * .5, y + h * .58, Math.max(2, w * .055), 0, Math.PI * 2); ctx.fill();
+      // Telegraph the strike in the windup, then draw a directional blade arc on impact.
+      if (enemy.windupTimer > 0 || enemy.chargeState === 'windup') {
+        ctx.globalAlpha = .3 + Math.sin((enemy.windupTimer || .2) * 28) * .15;
+        ctx.strokeStyle = glow; ctx.lineWidth = 3; ctx.beginPath();
+        ctx.arc(x + w / 2 + facing * w * .3, y + h * .66, w * .7, facing > 0 ? -.95 : Math.PI - .95, facing > 0 ? .85 : Math.PI + .85); ctx.stroke();
+      }
       if (enemy.attackTimer > 0 && enemy.getHitbox) {
         const hb = enemy.getHitbox();
-        if (hb) this.rect(hb.x, hb.y, hb.w, hb.h, '#e6e6e6');
+        if (hb) {
+          ctx.globalAlpha = .82; ctx.strokeStyle = glow; ctx.lineWidth = Math.max(3, h * .06); ctx.shadowBlur = 18;
+          ctx.beginPath(); ctx.arc(x + w / 2 + facing * w * .35, y + h * .57, Math.max(w, h * .58), facing > 0 ? -.85 : Math.PI - .85, facing > 0 ? .7 : Math.PI + .7); ctx.stroke();
+          ctx.globalAlpha = .2; ctx.fillStyle = glow; ctx.fillRect(hb.x, hb.y + hb.h * .38, hb.w, hb.h * .28);
+        }
       }
+      if (phase === 2) {
+        ctx.globalAlpha = .55; ctx.strokeStyle = glow; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.ellipse(x + w / 2, y + h * .52, w * .62, h * .56, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+      ctx.restore();
       return;
     }
     if (enemy.enemyType === 'charger') {
@@ -1011,7 +1074,8 @@ export class Renderer {
         const centerX = item.x + item.w / 2;
         const centerY = item.y + item.h / 2 + bob;
         const ctx = this.ctx;
-        ctx.save(); ctx.globalAlpha = 0.25 + Math.sin((gm.runTime || 0) * 4 + item.x) * 0.06;
+        const rarity = relic?.rarity || 1;
+        ctx.save(); ctx.globalAlpha = (relic ? 0.3 - rarity * 0.035 : 0.25) + Math.sin((gm.runTime || 0) * 4 + item.x) * 0.04;
         ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = relic ? 16 : 10;
         ctx.beginPath(); ctx.ellipse(centerX, centerY, 15, 16, 0, 0, Math.PI * 2); ctx.fill();
         ctx.restore();

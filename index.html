@@ -67,7 +67,7 @@
         </header>
         <nav class="fist-inventory-tabs" role="tablist" aria-label="Inventario de Ardan">
           <button class="fist-inventory-tab is-active" type="button" role="tab" aria-selected="true" data-inventory-tab="arms">BRAZOS</button>
-          <button class="fist-inventory-tab" type="button" role="tab" aria-selected="false" data-inventory-tab="cosmetics">VESTUARIO <span data-cosmetic-count>0/5</span></button>
+          <button class="fist-inventory-tab" type="button" role="tab" aria-selected="false" data-inventory-tab="cosmetics">VESTUARIO <span data-cosmetic-count>0/17</span></button>
         </nav>
         <section class="fist-inventory-view" data-inventory-view="arms" role="tabpanel">
           <p class="fist-inventory-copy">Elige dos brazos. Sus golpes y poderes se combinan.</p>
@@ -75,8 +75,14 @@
           <footer class="hud__inventory-hint" data-fist-inventory-hint>ELIGE HASTA DOS BRAZOS</footer>
         </section>
         <section class="fist-inventory-view hidden" data-inventory-view="cosmetics" role="tabpanel">
-          <p class="fist-inventory-copy">Los recuerdos encontrados permanecen entre partidas. Selecciona los adornos que llevará Ardan.</p>
-          <div class="fist-inventory-cosmetics" data-cosmetic-slots></div>
+          <p class="fist-inventory-copy">Prueba tus recuerdos y cambia el atuendo de Ardan sin salir del vestuario.</p>
+          <div class="cosmetic-workshop">
+            <aside class="cosmetic-preview" aria-live="polite">
+              <div class="cosmetic-preview__stage"><canvas width="260" height="280" data-cosmetic-preview aria-label="Ardan con el atuendo seleccionado"></canvas></div>
+              <div class="cosmetic-preview__details"><span>VESTUARIO DE ARDAN</span><b data-cosmetic-preview-name>ARDAN</b><small data-cosmetic-preview-copy>Selecciona una pieza para probársela.</small></div>
+            </aside>
+            <div class="fist-inventory-cosmetics" data-cosmetic-slots></div>
+          </div>
           <footer class="hud__inventory-hint" data-cosmetic-hint>ENCUENTRA RELIQUIAS EN LAS SALAS</footer>
         </section>
         <div class="fist-inventory-footnote">E · CERRAR INVENTARIO</div>

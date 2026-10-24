@@ -19,11 +19,22 @@ export const WAR_LOCATIONS = [
 ];
 
 export const WAR_RELICS = [
-  { id: 'standard_ribbon', name: 'Cinta del estandarte', glyph: '⚑', color: '#a84d69', look: 'ribbon', description: 'Una tira del estandarte de la Guardia del Sur. Ardan la anudó a su capa la noche en que los vecinos abrieron las puertas del refugio.' },
-  { id: 'city_medal', name: 'Medalla de San Telmo', glyph: '✹', color: '#c5a66f', look: 'medal', description: 'La medalla se entregaba a quienes evacuaban civiles bajo fuego. El reverso lleva grabados los nombres de tres hermanas.' },
-  { id: 'moro_insignia', name: 'Insignia quebrada', glyph: '✦', color: '#9c91b5', look: 'insignia', description: 'Una insignia arrancada a un oficial de Moro en el puente. La grieta conserva una marca de los seis brazos.' },
-  { id: 'bell_charm', name: 'Amuleto de campana', glyph: '♧', color: '#8abac2', look: 'bell', description: 'Un pequeño badajo de plata, escondido por el sacristán antes de que sellaran la catedral. Aún vibra cuando Ardan se acerca a una reliquia.' },
-  { id: 'mourning_cloak', name: 'Manto de luto', glyph: '◈', color: '#78648e', look: 'cloak', description: 'Tela cosida con retazos de los barrios caídos. No perteneció a un soldado: las familias la usaron para señalar el camino a casa.' },
+  { id: 'standard_ribbon', name: 'Cinta del estandarte', glyph: '⚑', color: '#a84d69', look: 'ribbon', rarity: 1, description: 'Una tira del estandarte de la Guardia del Sur. Ardan la anudó a su capa la noche en que los vecinos abrieron las puertas del refugio.' },
+  { id: 'city_medal', name: 'Medalla de San Telmo', glyph: '✹', color: '#c5a66f', look: 'medal', rarity: 2, description: 'La medalla se entregaba a quienes evacuaban civiles bajo fuego. El reverso lleva grabados los nombres de tres hermanas.' },
+  { id: 'moro_insignia', name: 'Insignia quebrada', glyph: '✦', color: '#9c91b5', look: 'insignia', rarity: 3, description: 'Una insignia arrancada a un oficial de Moro en el puente. La grieta conserva una marca de los seis brazos.' },
+  { id: 'bell_charm', name: 'Amuleto de campana', glyph: '♧', color: '#8abac2', look: 'bell', rarity: 4, description: 'Un pequeño badajo de plata, escondido por el sacristán antes de que sellaran la catedral. Aún vibra cuando Ardan se acerca a una reliquia.' },
+  { id: 'mourning_cloak', name: 'Manto de luto', glyph: '◈', color: '#78648e', look: 'cloak', rarity: 5, description: 'Tela cosida con retazos de los barrios caídos. No perteneció a un soldado: las familias la usaron para señalar el camino a casa.' },
+  { id: 'red_sash', name: 'Fajín de la última guardia', glyph: '〽', color: '#a74661', look: 'sash', rarity: 2, description: 'El fajín del sargento que mantuvo abierta la ruta de evacuación hasta el último toque de queda.' },
+  { id: 'ash_hood', name: 'Capucha de ceniza', glyph: '△', color: '#91839f', look: 'hood', rarity: 3, description: 'Una capucha de los mensajeros que cruzaban la ciudad durante los bombardeos.' },
+  { id: 'iron_pauldron', name: 'Hombrera del puente', glyph: '⬟', color: '#8691ad', look: 'pauldron', rarity: 3, description: 'Placa rescatada del puente quebrado; aún conserva las muescas de las flechas de Moro.' },
+  { id: 'blue_scarf', name: 'Pañuelo de San Telmo', glyph: '〰', color: '#6f9eb4', look: 'scarf', rarity: 1, description: 'Los vecinos lo ataban en las ventanas para guiar a los heridos hasta el refugio.' },
+  { id: 'cinder_crown', name: 'Diadema de la fundición', glyph: '♜', color: '#bd806b', look: 'crown', rarity: 4, description: 'Un aro de cobre martillado por los trabajadores que convirtieron la fundición en barricada.' },
+  { id: 'moro_halfmask', name: 'Media máscara capturada', glyph: '◖', color: '#9385a7', look: 'mask', rarity: 5, description: 'Máscara de un explorador de Moro. Ardan la lleva como recuerdo de que incluso el enemigo tuvo rostro.' },
+  { id: 'bellkeeper_chain', name: 'Cadena del campanero', glyph: '⛓', color: '#a9a2be', look: 'chain', rarity: 4, description: 'La cadena que sujetaba la campana antes de que el sacristán la ocultara bajo la catedral.' },
+  { id: 'field_medic_badge', name: 'Insignia de campaña', glyph: '✚', color: '#8eaa91', look: 'badge', rarity: 2, description: 'Insignia de quienes curaban a cualquier herido, sin preguntar de qué lado luchaba.' },
+  { id: 'blackgate_feather', name: 'Pluma de la Puerta Negra', glyph: '➶', color: '#8e77b4', look: 'feather', rarity: 3, description: 'Pluma de mando caída durante la retirada de los mariscales de Moro.' },
+  { id: 'sixfold_charm', name: 'Sello de los seis', glyph: '✣', color: '#c4a1e6', look: 'sixfold', rarity: 5, description: 'Un sello improvisado por los defensores: seis marcas alrededor del nombre de Ardan.' },
+  { id: 'wall_knot', name: 'Nudo de la muralla', glyph: '⌘', color: '#8e758a', look: 'knot', rarity: 1, description: 'Cuerda anudada por los albañiles para señalar una brecha segura durante el asedio.' },
 ];
 
 export const WAR_RELIC_BY_ID = Object.fromEntries(WAR_RELICS.map((relic) => [relic.id, relic]));

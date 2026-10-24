@@ -839,6 +839,15 @@ html, body {
 .fist-inventory-cosmetic__glyph { color: var(--cosmetic-color); font: 25px Georgia, serif; text-shadow: 0 0 12px var(--cosmetic-color); }
 .fist-inventory-cosmetic b { color: #ded2e8; font: 8px/1.35 'JetBrains Mono', monospace; letter-spacing: .06em; }
 .fist-inventory-cosmetic small { color: #988ba5; font: 7px 'JetBrains Mono', monospace; letter-spacing: .08em; }
+.cosmetic-workshop { display: grid; grid-template-columns: minmax(230px, .8fr) minmax(0, 1.2fr); align-items: start; gap: 14px; }
+.cosmetic-preview { position: sticky; top: 0; display: flex; min-width: 0; flex-direction: column; align-items: center; margin: 0; padding: 10px; border: 1px solid #493c58; background: radial-gradient(ellipse at 50% 25%, #292039, #0d0b12 72%); }
+.cosmetic-preview__stage { width: 100%; display: grid; place-items: center; overflow: hidden; border-bottom: 1px solid #3e334d; }
+.cosmetic-preview canvas { width: min(100%, 260px); height: auto; aspect-ratio: 13 / 14; image-rendering: pixelated; }
+.cosmetic-preview__details { display: grid; width: 100%; gap: 8px; padding: 12px 5px 5px; }
+.cosmetic-preview span { color: #a78ac4; font: 8px 'JetBrains Mono', monospace; letter-spacing: .18em; }
+.cosmetic-preview b { color: #e6d8f2; font: 12px Georgia, serif; letter-spacing: .08em; }
+.cosmetic-preview small { color: #a99bb8; font: 10px/1.5 Georgia, serif; }
+.cosmetic-workshop .fist-inventory-cosmetics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .fist-inventory-footnote { margin-top: 14px; color: #776a83; font: 9px 'JetBrains Mono', monospace; letter-spacing: .12em; text-align: right; }
 .touch__right { grid-template-areas: 'attack jump' 'dash ability' 'heal inventory'; }
 .touch__inventory { grid-area: inventory; border-color: #a887d499; color: #d8c2f0; font-size: 23px; }
@@ -848,6 +857,13 @@ html, body {
   .fist-inventory-panel .hud__inventory-arms { gap: 7px; }
   .fist-inventory-panel .hud__inventory-arm { height: 76px; }
   .fist-inventory-cosmetics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .cosmetic-workshop { grid-template-columns: 1fr; gap: 10px; }
+  .cosmetic-preview { top: 0; padding: 5px; }
+  .cosmetic-preview canvas { width: min(100%, 220px); }
+  .cosmetic-preview__details { gap: 5px; padding: 8px 3px 3px; }
+  .cosmetic-preview b { font-size: 9px; }
+  .cosmetic-preview small { font-size: 8px; }
+  .cosmetic-workshop .fist-inventory-cosmetic { min-height: 74px; }
   .fist-inventory-cosmetic { min-height: 82px; padding: 6px 4px; }
   .fist-inventory-cosmetic b { font-size: 7px; }
   .fist-inventory-panel .hud__inventory-hint { font-size: 8px; line-height: 1.6; }

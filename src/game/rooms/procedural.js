@@ -82,12 +82,12 @@ export class RoomGenerator {
     return room;
   }
 
-  randomLootPosition(width, height, platforms, occupied = [], intro = false, lootHeight = 18) {
+  randomLootPosition(width, height, platforms, occupied = [], intro = false, lootHeight = 18, platformChance = 0.48) {
     const floorY = height - 48;
     for (let attempt = 0; attempt < 36; attempt += 1) {
       let x;
       let y;
-      if (!intro && platforms.length && Math.random() < 0.48) {
+      if (!intro && platforms.length && Math.random() < platformChance) {
         const platform = platforms[Math.floor(Math.random() * platforms.length)];
         x = randomBetween(platform.x + 10, platform.x + platform.w - 28);
         y = platform.y - lootHeight - 2;

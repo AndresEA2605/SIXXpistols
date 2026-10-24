@@ -1,8 +1,9 @@
 import { WAR_RELICS } from '../game/rooms/warLore.js';
 
 export class HUD {
-  constructor(root) {
+  constructor(root, renderer = null) {
     this.root = root;
+    this.renderer = renderer;
     this.heartsEl = root.querySelector('[data-hearts]');
     this.hpText = root.querySelector('[data-hp-text]');
     this.roomEl = root.querySelector('[data-room]');
@@ -27,6 +28,11 @@ export class HUD {
     this.cosmeticSlotsEl = this.inventoryEl?.querySelector('[data-cosmetic-slots]');
     this.cosmeticHintEl = this.inventoryEl?.querySelector('[data-cosmetic-hint]');
     this.cosmeticCountEl = this.inventoryEl?.querySelector('[data-cosmetic-count]');
+    this.cosmeticPreview = this.inventoryEl?.querySelector('[data-cosmetic-preview]');
+    this.cosmeticPreviewName = this.inventoryEl?.querySelector('[data-cosmetic-preview-name]');
+    this.cosmeticPreviewCopy = this.inventoryEl?.querySelector('[data-cosmetic-preview-copy]');
+    this.previewCosmeticId = null;
+    this.previewMode = 'current';
     this.inventorySignature = '';
     this.cosmeticSignature = '';
     this.inventoryTab = 'arms';
@@ -48,13 +54,17 @@ export class HUD {
         const player = this.gameManager.player;
         const id = cosmetic.dataset.cosmeticSelect;
         if (!player.collectedWarCosmetics.includes(id)) return;
+        this.previewCosmeticId = id;
         const index = player.equippedWarCosmetics.indexOf(id);
         if (index >= 0) player.equippedWarCosmetics.splice(index, 1);
         else player.equippedWarCosmetics.push(id);
+        this.previewMode = 'current';
         try { localStorage.setItem('sixxpistols-equipped-cosmetics', JSON.stringify(player.equippedWarCosmetics)); } catch {}
         this.updateInventory(this.gameManager);
       }
     });
+    this.inventoryEl?.addEventListener('pointerover', (event) => this.selectCosmeticPreview(event));
+    this.inventoryEl?.addEventListener('focusin', (event) => this.selectCosmeticPreview(event));
     this.setInventoryTab('arms');
   }
 
@@ -181,6 +191,47 @@ export class HUD {
       const state = button.querySelector('[data-cosmetic-state]');
       if (state) state.textContent = isEquipped ? 'EQUIPADO' : isOwned ? 'ENCONTRADO' : 'POR DESCUBRIR';
     });
+    if (!WAR_RELICS.some((relic) => relic.id === this.previewCosmeticId && owned.includes(relic.id))) {
+      this.previewCosmeticId = equipped[equipped.length - 1] || owned[owned.length - 1] || null;
+    }
+    this.drawCosmeticPreview(gm, this.previewCosmeticId, this.previewMode === 'try');
+  }
+
+  selectCosmeticPreview(event) {
+    const button = event.target.closest('[data-cosmetic-select]');
+    if (!button || !this.gameManager?.player.collectedWarCosmetics.includes(button.dataset.cosmeticSelect)) return;
+    this.previewCosmeticId = button.dataset.cosmeticSelect;
+    this.previewMode = 'try';
+    this.drawCosmeticPreview(this.gameManager, this.previewCosmeticId, true);
+  }
+
+  drawCosmeticPreview(gm, id, previewEquip = false) {
+    const canvas = this.cosmeticPreview;
+    const renderer = this.renderer;
+    const relic = WAR_RELICS.find((entry) => entry.id === id);
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx || !renderer || !gm?.player) return;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0b0911';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#554367';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(26, 270); ctx.lineTo(234, 270); ctx.stroke();
+    if (this.cosmeticPreviewName) this.cosmeticPreviewName.textContent = relic ? relic.name.toUpperCase() : 'ARDAN';
+    if (this.cosmeticPreviewCopy) this.cosmeticPreviewCopy.textContent = relic ? relic.description : 'Elige un recuerdo encontrado para ver cómo cambia su atuendo.';
+    const previousContext = renderer.ctx;
+    const player = Object.create(gm.player);
+    player.x = 40; player.y = 27; player.w = 20; player.h = 60;
+    player.onGround = true; player.isFlying = false; player.attacking = false; player.dashing = false;
+    player.aimingUp = false; player.invuln = 0; player.anim = 'idle'; player.animTimer = 0;
+    player.equippedWarCosmetics = [...(gm.player.equippedWarCosmetics || [])];
+    if (previewEquip && relic && !player.equippedWarCosmetics.includes(relic.id)) player.equippedWarCosmetics.push(relic.id);
+    renderer.ctx = ctx;
+    ctx.save(); ctx.scale(3, 3);
+    renderer.drawPlayer(player, 0);
+    ctx.restore();
+    renderer.ctx = previousContext;
   }
 
   setInventoryTab(tab) {

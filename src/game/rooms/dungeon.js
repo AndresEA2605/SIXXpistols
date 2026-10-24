@@ -44,6 +44,12 @@ export class Dungeon {
     const firstFist = fistOrder[0];
     const guardianRewards = fistOrder.slice(1);
     let nextReward = 0;
+    const availableRelics = shuffled(WAR_RELICS.filter((relic) => !unlockedCosmetics.includes(relic.id)))
+      .slice(0, 5).sort((a, b) => a.rarity - b.rarity);
+    const combatRooms = RUN_PLAN.map((stage, index) => stage.type === 'combat' ? index : null)
+      .filter((index) => index !== null);
+    const relicRooms = shuffled(combatRooms).slice(0, availableRelics.length).sort((a, b) => a - b);
+    const relicByRoom = new Map(relicRooms.map((roomIndex, relicIndex) => [roomIndex, availableRelics[relicIndex]]));
 
     RUN_PLAN.forEach((stage, index) => {
       const width = 1024;
@@ -61,22 +67,20 @@ export class Dungeon {
       room.cleared = false;
       room.doorOpen = false;
 
-      const relicForRoom = { 2: 0, 5: 1, 8: 2, 11: 3, 14: 4 }[index];
-      if (relicForRoom !== undefined) {
-        const relic = WAR_RELICS[relicForRoom];
-        if (!unlockedCosmetics.includes(relic.id)) {
-          const position = this.generator.randomLootPosition(width, height, room.platforms,
-            [...room.enemies, ...room.items], false, 18);
-          room.items.push({ ...position, w: 18, h: 18, type: 'cosmetic', cosmeticId: relic.id, collected: false });
-        }
+      const relic = relicByRoom.get(index);
+      if (relic) {
+        const platformChance = Math.min(0.88, 0.36 + relic.rarity * 0.1);
+        const position = this.generator.randomLootPosition(width, height, room.platforms,
+          [...room.enemies, ...room.items], false, 18, platformChance);
+        room.items.push({ ...position, w: 18, h: 18, type: 'cosmetic', cosmeticId: relic.id, rarity: relic.rarity, collected: false });
       }
 
       if (stage.type === 'guardian') {
         const bossX = width * (0.66 + Math.random() * 0.12);
-        room.enemies = [new Guardian(bossX, height - 48 - 64, room.guardianRank)];
+        room.enemies = [new Guardian(bossX, height - 48 - 78, room.guardianRank)];
         if (room.location?.bossTitle) room.enemies[0].displayName = room.location.bossTitle;
       } else if (stage.type === 'final') {
-        room.enemies = [new Moro(width * (0.68 + Math.random() * 0.1), height - 48 - 76)];
+        room.enemies = [new Moro(width * (0.68 + Math.random() * 0.1), height - 48 - 92)];
         room.enemies[0].displayName = 'MORO, EL DESTRUCTOR';
         room.fistPickup = null;
         room.bossReward = null;
