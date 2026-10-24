@@ -84,19 +84,25 @@ export class GameManager {
 
   buildTraining() {
     const w = 1024, h = 576;
-    // suelo
-    this.solids.push(new Solid(0, h - 48, w, 48));
-    // plataformas más accesibles
-    this.solids.push(new Solid(150, h - 130, 110, 10));
-    this.solids.push(new Solid(360, h - 150, 120, 10));
-    this.solids.push(new Solid(620, h - 140, 130, 10));
+    // suelo con hueco para obligar a usar plataformas
+    this.solids.push(new Solid(0, h - 48, 280, 48));
+    this.solids.push(new Solid(420, h - 48, w - 420, 48));
+    // plataformas para cruzar
+    this.solids.push(new Solid(290, h - 110, 70, 10));
+    this.solids.push(new Solid(210, h - 170, 70, 10));
+    this.solids.push(new Solid(150, h - 230, 70, 10));
+    this.solids.push(new Solid(340, h - 260, 80, 10));
+    this.solids.push(new Solid(520, h - 200, 90, 10));
+    this.solids.push(new Solid(660, h - 150, 90, 10));
     // paredes laterales
     this.solids.push(new Solid(-16, 0, 16, h));
     this.solids.push(new Solid(w, 0, 16, h));
 
-    this.player.reset(80, h - 48 - 30);
-    // menos enemigos para aprender
-    this.enemies.push(new Grunt(460, h - 48 - 24));
+    this.player.reset(60, h - 48 - 30);
+    // enemigos posicionados para obligar a pelear tras cruzar
+    this.enemies.push(new Grunt(560, h - 48 - 24));
+    this.enemies.push(new Grunt(720, h - 48 - 24));
+    this.enemies.push(new Charger(620, h - 48 - 26));
     this.door = { x: w - 64, y: h - 48 - 56, w: 32, h: 56, open: false, next: 1 };
     this.enemiesLeft = this.enemies.filter((e) => !e.dead).length;
   }
