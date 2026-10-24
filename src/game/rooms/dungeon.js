@@ -35,17 +35,24 @@ export class Dungeon {
     this.currentRoomIndex = 0;
     this.totalRooms = RUN_PLAN.length;
     this.collectedFists = [];
+    this.sessionRelicsSeen = new Set();
   }
 
-  generateDungeon(unlockedCosmetics = []) {
+  generateDungeon() {
     this.rooms = [];
     this.collectedFists = [];
     const fistOrder = shuffled(FISTS);
     const firstFist = fistOrder[0];
     const guardianRewards = fistOrder.slice(1);
     let nextReward = 0;
-    const availableRelics = shuffled(WAR_RELICS.filter((relic) => !unlockedCosmetics.includes(relic.id)))
-      .slice(0, 5).sort((a, b) => a.rarity - b.rarity);
+    const unseenRelics = WAR_RELICS.filter((relic) => !this.sessionRelicsSeen.has(relic.id));
+    const newRelics = shuffled(unseenRelics).slice(0, 5);
+    if (newRelics.length < 5) {
+      const freshIds = new Set(newRelics.map((relic) => relic.id));
+      newRelics.push(...shuffled(WAR_RELICS.filter((relic) => !freshIds.has(relic.id))).slice(0, 5 - newRelics.length));
+    }
+    newRelics.forEach((relic) => this.sessionRelicsSeen.add(relic.id));
+    const availableRelics = newRelics.sort((a, b) => a.rarity - b.rarity);
     const combatRooms = RUN_PLAN.map((stage, index) => stage.type === 'combat' ? index : null)
       .filter((index) => index !== null);
     const relicRooms = shuffled(combatRooms).slice(0, availableRelics.length).sort((a, b) => a - b);

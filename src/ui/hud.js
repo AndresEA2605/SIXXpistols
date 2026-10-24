@@ -64,7 +64,6 @@ export class HUD {
           return;
         }
         this.previewMode = 'current';
-        try { localStorage.setItem('sixxpistols-equipped-cosmetics', JSON.stringify(player.equippedWarCosmetics)); } catch {}
         this.updateInventory(this.gameManager);
       }
     });

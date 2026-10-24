@@ -44,7 +44,7 @@ export class GameManager {
     this.player.hp = 5;
     
     this.dungeon = new Dungeon();
-    this.dungeon.generateDungeon(this.player.collectedWarCosmetics);
+    this.dungeon.generateDungeon();
     this.loadCurrentRoom();
   }
 
@@ -234,10 +234,6 @@ export class GameManager {
       } else if (item.type === 'cosmetic' && item.cosmeticId && !this.player.collectedWarCosmetics.includes(item.cosmeticId)) {
         this.player.collectedWarCosmetics.push(item.cosmeticId);
         this.player.equippedWarCosmetics.push(item.cosmeticId);
-        try {
-          localStorage.setItem('sixxpistols-collected-cosmetics', JSON.stringify(this.player.collectedWarCosmetics));
-          localStorage.setItem('sixxpistols-equipped-cosmetics', JSON.stringify(this.player.equippedWarCosmetics));
-        } catch {}
       }
       this.items.splice(i, 1);
       this.pickedItem = item;

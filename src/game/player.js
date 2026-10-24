@@ -1,18 +1,13 @@
 import { Entity } from './entities.js';
 import { clamp } from '../core/math.js';
 import { FistManager } from './fists/fistManager.js';
-import { WAR_RELICS } from './rooms/warLore.js';
 
-const validRelicIds = new Set(WAR_RELICS.map((relic) => relic.id));
-
-function readSavedCosmetics(key) {
-  try {
-    const parsed = JSON.parse(globalThis.localStorage?.getItem(key) || '[]');
-    return Array.isArray(parsed) ? [...new Set(parsed.filter((id) => validRelicIds.has(id)))] : [];
-  } catch {
-    return [];
-  }
-}
+// Los cosméticos solo pertenecen a la partida actual. Borra las claves antiguas
+// para que las colecciones persistentes de versiones anteriores no reaparezcan.
+try {
+  globalThis.localStorage?.removeItem('sixxpistols-collected-cosmetics');
+  globalThis.localStorage?.removeItem('sixxpistols-equipped-cosmetics');
+} catch {}
 
 export class Player extends Entity {
   constructor(x, y) {
@@ -79,9 +74,8 @@ export class Player extends Entity {
     this.reachLevel = 0;
     this.focusLevel = 0;
     this.dashLevel = 0;
-    this.collectedWarCosmetics = readSavedCosmetics('sixxpistols-collected-cosmetics');
-    this.equippedWarCosmetics = readSavedCosmetics('sixxpistols-equipped-cosmetics')
-      .filter((id) => this.collectedWarCosmetics.includes(id)).slice(0, 5);
+    this.collectedWarCosmetics = [];
+    this.equippedWarCosmetics = [];
     this.armorLevel = 0;
     this.healLevel = 0;
     this.healAmount = 1;
