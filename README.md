@@ -43,11 +43,11 @@ Abre `http://localhost:8000`. Para generar el paquete publicable en `dist/`:
 npm run build
 ```
 
-## Publicación automática en GitHub Pages
+## Publicación automática
 
-El workflow `.github/workflows/deploy-pages.yml` empaqueta y publica el juego cada vez que se sube un commit a `main`. Para activarlo una sola vez, entra en **Settings → Pages** del repositorio y selecciona **GitHub Actions** como fuente de publicación. Después, cada `git push origin main` actualizará el sitio.
+El proyecto funciona en Vercel y GitHub Pages. `vercel.json` configura el comando `npm run build` y la carpeta de salida `dist`; con la integración de GitHub activada en Vercel, cada push a `main` genera un nuevo despliegue. El empaquetador incluye `assets/` si existe, así que una carpeta vacía no rompe el build.
 
-La dirección del proyecto será `https://andreseA2605.github.io/SIXXpistols/` cuando termine la primera publicación. También puedes iniciar una publicación manual desde **Actions → Build and deploy game to GitHub Pages → Run workflow**.
+El workflow `.github/workflows/deploy-pages.yml` también permite publicar con GitHub Pages. Para usar Pages, entra en **Settings → Pages** y selecciona **GitHub Actions** como fuente. Después, cada push a `main` actualizará el sitio. La dirección Pages será `https://andreseA2605.github.io/SIXXpistols/`.
 
 ## Estructura
 

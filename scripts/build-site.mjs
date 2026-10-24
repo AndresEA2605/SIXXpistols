@@ -8,8 +8,14 @@ const output = path.join(root, 'dist');
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 
-for (const entry of ['index.html', 'style.css', 'src', 'assets']) {
+for (const entry of ['index.html', 'style.css', 'src']) {
   await cp(path.join(root, entry), path.join(output, entry), { recursive: true, force: true });
+}
+
+try {
+  await cp(path.join(root, 'assets'), path.join(output, 'assets'), { recursive: true, force: true });
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
 }
 
 await writeFile(path.join(output, '.nojekyll'), '');
