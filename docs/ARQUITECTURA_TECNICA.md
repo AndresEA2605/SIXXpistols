@@ -23,7 +23,7 @@ Archivo: `src/game/player.js` - Clase `Player extends Entity`
 - Salud: `maxHp`, `hp`, `invuln`
 - Buffs: array acumulativo
 
-### Flujo `update(input, dt, solids, onAttack)`
+### Flujo `update(input, dt, solids, onAttack, onAbility)`
 1. Decrementar timers (cooldowns/invuln)
 2. Si `dashing`: aplicar velocidad fija, mover con colisiones, retornar
 3. Si `attacking`: frenar horizontal, actualizar timer, retornar
@@ -53,55 +53,42 @@ getAttackRect() {
 Archivo: `src/game/gameManager.js`
 
 ### Estados
-`menu | playing | upgrade | gameover | victory | paused`
+`menu | intro | playing | fistPickup | gameover | victory | paused`
 
 ### Responsabilidades
-- Inicializar/cargar habitaciones (`loadRoom`)
+- Inicializar/cargar salas (`loadCurrentRoom`)
 - Controlar apertura de puerta al limpiar sala
-- Generar 3 mejoras aleatorias con `shuffle`
-- Aplicar mejoras al jugador
-- Tracking: `runTime`, `roomTime`, `roomsCleared`, `kills`, `totalDamageDealt`
-- Gestión de boss intro
+- Recorrer 17 salas con escenarios fijos y encuentros de cantidad, tipo y posición de enemigos variables
+- Gestionar recolección de brazos elementales y mejoras de partida
+- Tracking: `runTime`, `kills`, `totalDamageDealt`
+- Presentar el prólogo, la recuperación del brazo y el combate final contra Moro
 
 ### Habitaciones
 | Sala | Tipo | Enemigos | Notas |
 | --- | --- | --- | --- |
-| 0 | TRAINING | 2x Grunt | Tutorial/plataformas, desbloquea mejoras al limpiar |
-| 1 | CHALLENGE | Grunt, Charger, Grunt | Más vertical, presión, desbloquea mejoras al limpiar |
-| 2 | BOSS | Boss | Intro 2s, Victoria al derrotar |
-
-### Generación de Mejora
-```js
-generateUpgrades() {
-  const pool = shuffle(UPGRADE_POOL);
-  this.upgradeOptions = pool.slice(0, 3);
-}
-```
-
-### Aplicación de Buff
-Delegado a `Player.applyBuff(buff)`. Modifica stats in-place y para `heart` cura al máximo.
+| 0 | INTRO | Ninguno | Escenario seguro; recoge el brazo de fuego del altar |
+| 1-2, 4-5, 7-8, 10-11, 13-14 | COMBATE | Cantidad y tipos variables | Dos encuentros antes de cada guardián |
+| 3, 6, 9, 12, 15 | GUARDIÁN | Un guardián escalado | Al derrotarlo aparece el siguiente brazo elemental |
+| 16 | JEFE | Moro | Encuentro final fijo |
 
 ## 5. Sistema de Ítems/Buffs
-`UPGRADE_POOL`:
+Las mejoras fijas de cada sala se recogen al tocarlas:
 | id | Efecto |
 | --- | --- |
-| blade | +1 daño, +4 rango |
-| reach | +10 rango, +6 ancho |
-| swiftness | +38 velocidad, *0.88 cooldown dash |
-| momentum | +36 salto, +70 velocidad dash |
-| heart | +1 max HP, cura completa |
-
-Patrón: **Strategy/Data-Driven**. Añadir nuevo buff = nuevo objeto en pool + caso en `applyBuff`.
+| heart | Recupera hasta 2 puntos de salud |
+| vitality | Aumenta 1 punto de salud máxima y cura 1 |
+| power | Aumenta el daño de los ataques durante la partida |
 
 ## 6. Sistema de Combate e Integración
 En `src/main.js`:
 - **Ataque jugador**: se detecta al inicio del swing (`attackTimer > attackDuration - 0.05`) para golpear una vez por swing (`_hitThisSwing`)
-- **Enemigo-Jugador**: colisión AABB directa; Boss usa `getHitbox()` durante ataque
-- **Transición puerta**: si puerta abierta y colisión -> modal de mejora (salas 0-1) o Victoria (sala 2)
+- **Enemigo-Jugador**: colisión AABB directa y proyectiles enemigos; Moro es el jefe final
+- **Brazos**: seis poderes distintos se activan con `L/C`; cambiar brazo usa `Q/Tab`
+- **Transición puerta**: requiere limpiar el encuentro; las salas con un brazo también requieren recogerlo
 - **Game Over**: `player.hp <= 0` en estado `playing`
 
 ## 7. Renderizado
-`Renderer` dibuja en escala de grises con primitivas (`fillRect`, `strokeRect`). Sin spritesheet. Camara con seguimiento + screen shake. `Camera.follow()` usa zona muerta.
+`Renderer` dibuja escenarios, enemigos, brazos e ítems con primitivas Canvas. Sin spritesheet. Cámara con seguimiento y screen shake.
 
 ## 8. Audio
 `AudioManager` usa WebAudio sintetizado. Requiere `unlock()` tras primer input del usuario (política autoplay). Todos los SFX generados proceduralmente.
@@ -131,7 +118,7 @@ Ver `README.md` con estructura, controles, ejecución.
 ### Sugerencias de commits
 ```bash
 git add .
-git commit -m "feat: prototipo SIXXPISTOLS HTML5 Canvas (3 salas, jefe, mejoras, HUD)"
+git commit -m "feat: aventura de Ardan con seis brazos y salas de combate"
 git push origin main
 ```
 

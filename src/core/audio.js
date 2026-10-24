@@ -126,6 +126,30 @@ export class AudioManager {
         this.noise({ duration: 0.12, volume: 0.16, filterFrequency: 2600 });
         this.tone({ frequency: 520, endFrequency: 260, type: 'triangle', duration: 0.1, volume: 0.06 });
         break;
+      case 'heal':
+        [440, 554, 659, 880].forEach((frequency, i) => {
+          this.tone({ frequency, endFrequency: frequency * 1.08, type: 'sine', duration: 0.42, volume: 0.075, delay: i * 0.055 });
+        });
+        this.noise({ duration: 0.16, volume: 0.035, filterFrequency: 1800 });
+        break;
+      case 'world':
+        this.noise({ duration: 0.9, volume: 0.09, filterFrequency: 280 });
+        [110, 164.81, 220].forEach((frequency, i) => {
+          this.tone({ frequency, endFrequency: frequency * 1.5, type: 'sine', duration: 1.1, volume: 0.08, delay: i * 0.12 });
+        });
+        break;
+      case 'impact':
+        this.noise({ duration: 0.09, volume: 0.1, filterFrequency: 780 });
+        this.tone({ frequency: 180, endFrequency: 75, type: 'triangle', duration: 0.12, volume: 0.045 });
+        break;
+      case 'enemyShot':
+        this.noise({ duration: 0.13, volume: 0.075, filterFrequency: 1450 });
+        this.tone({ frequency: 260, endFrequency: 120, type: 'triangle', duration: 0.15, volume: 0.035 });
+        break;
+      case 'flight':
+        this.noise({ duration: 0.24, volume: 0.08, filterFrequency: 1150 });
+        this.tone({ frequency: 125, endFrequency: 270, type: 'sawtooth', duration: 0.28, volume: 0.045 });
+        break;
       case 'hit':
         this.tone({ frequency: 160, endFrequency: 60, type: 'square', duration: 0.18, volume: 0.12 });
         this.noise({ duration: 0.1, volume: 0.14, filterFrequency: 700 });
