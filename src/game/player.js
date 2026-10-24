@@ -81,7 +81,7 @@ export class Player extends Entity {
     this.dashLevel = 0;
     this.collectedWarCosmetics = readSavedCosmetics('sixxpistols-collected-cosmetics');
     this.equippedWarCosmetics = readSavedCosmetics('sixxpistols-equipped-cosmetics')
-      .filter((id) => this.collectedWarCosmetics.includes(id));
+      .filter((id) => this.collectedWarCosmetics.includes(id)).slice(0, 5);
     this.armorLevel = 0;
     this.healLevel = 0;
     this.healAmount = 1;

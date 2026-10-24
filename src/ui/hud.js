@@ -55,9 +55,14 @@ export class HUD {
         const id = cosmetic.dataset.cosmeticSelect;
         if (!player.collectedWarCosmetics.includes(id)) return;
         this.previewCosmeticId = id;
+        this.previewMode = 'current';
         const index = player.equippedWarCosmetics.indexOf(id);
         if (index >= 0) player.equippedWarCosmetics.splice(index, 1);
-        else player.equippedWarCosmetics.push(id);
+        else if (player.equippedWarCosmetics.length < 5) player.equippedWarCosmetics.push(id);
+        else {
+          this.updateInventory(this.gameManager);
+          return;
+        }
         this.previewMode = 'current';
         try { localStorage.setItem('sixxpistols-equipped-cosmetics', JSON.stringify(player.equippedWarCosmetics)); } catch {}
         this.updateInventory(this.gameManager);
@@ -176,8 +181,10 @@ export class HUD {
     const equipped = player.equippedWarCosmetics || [];
     if (this.cosmeticCountEl) this.cosmeticCountEl.textContent = `${owned.length}/${WAR_RELICS.length}`;
     if (this.cosmeticHintEl) {
-      this.cosmeticHintEl.textContent = owned.length
-        ? 'SELECCIONA UNA PIEZA PARA EQUIPARLA O QUITARLA · SE GUARDA ENTRE PARTIDAS'
+      this.cosmeticHintEl.textContent = equipped.length >= 5
+        ? '5/5 EQUIPADOS · QUITA UNA PIEZA PARA PONER OTRA'
+        : owned.length
+        ? `${equipped.length}/5 EQUIPADOS · SELECCIONA PIEZAS PARA CAMBIAR EL ATUENDO`
         : 'ENCUENTRA RELIQUIAS DE GUERRA PARA DESBLOQUEAR ADORNOS';
     }
     this.cosmeticSlotsEl?.querySelectorAll('[data-cosmetic-select]').forEach((button) => {
