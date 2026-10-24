@@ -86,18 +86,17 @@ export class GameManager {
     const w = 1024, h = 576;
     // suelo
     this.solids.push(new Solid(0, h - 48, w, 48));
-    // plataformas
-    this.solids.push(new Solid(120, h - 140, 90, 10));
-    this.solids.push(new Solid(320, h - 190, 110, 10));
-    this.solids.push(new Solid(620, h - 150, 120, 10));
+    // plataformas más accesibles
+    this.solids.push(new Solid(150, h - 130, 110, 10));
+    this.solids.push(new Solid(360, h - 150, 120, 10));
+    this.solids.push(new Solid(620, h - 140, 130, 10));
     // paredes laterales
     this.solids.push(new Solid(-16, 0, 16, h));
     this.solids.push(new Solid(w, 0, 16, h));
 
-    this.player.reset(64, h - 48 - 30);
-    // enemigos
-    this.enemies.push(new Grunt(420, h - 48 - 24));
-    this.enemies.push(new Grunt(560, h - 48 - 24));
+    this.player.reset(80, h - 48 - 30);
+    // menos enemigos para aprender
+    this.enemies.push(new Grunt(460, h - 48 - 24));
     this.door = { x: w - 64, y: h - 48 - 56, w: 32, h: 56, open: false, next: 1 };
     this.enemiesLeft = this.enemies.filter((e) => !e.dead).length;
   }

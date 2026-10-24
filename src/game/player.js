@@ -8,11 +8,17 @@ export class Player extends Entity {
     this.facing = 1;
 
     // Movimiento base
-    this.moveSpeed = 230;
-    this.accel = 1800;
-    this.jumpForce = 620;
+    this.moveSpeed = 250;
+    this.accel = 2000;
+    this.jumpForce = 680;
     this.maxAirJumps = 0;
     this.airJumps = 0;
+
+    // Jump feel
+    this.coyoteTime = 0.12;
+    this.coyoteTimer = 0;
+    this.jumpBuffer = 0.12;
+    this.jumpBufferTimer = 0;
 
     // Dash
     this.canDash = true;
@@ -65,6 +71,8 @@ export class Player extends Entity {
     this.invuln = 0;
     this.hp = this.maxHp;
     this.onGround = false;
+    this.coyoteTimer = 0;
+    this.jumpBufferTimer = 0;
   }
 
   applyBuff(buff) {
@@ -110,6 +118,18 @@ export class Player extends Entity {
     if (this.invuln > 0) this.invuln -= dt;
     if (this.iFrames > 0) this.iFrames -= dt;
 
+    if (input.wasPressed('jump')) {
+      this.jumpBufferTimer = this.jumpBuffer;
+    }
+    if (this.jumpBufferTimer > 0) this.jumpBufferTimer -= dt;
+
+    if (this.onGround) {
+      this.coyoteTimer = this.coyoteTime;
+      this.airJumps = 0;
+    } else {
+      if (this.coyoteTimer > 0) this.coyoteTimer -= dt;
+    }
+
     if (this.dashing) {
       this.dashTimer -= dt;
       this.vx = this.dashDir * this.dashSpeed;
@@ -149,14 +169,15 @@ export class Player extends Entity {
     }
 
     // Salto
-    if (input.wasPressed('jump')) {
-      if (this.onGround) {
-        this.vy = -this.jumpForce;
-        this.airJumps = 0;
-      } else if (this.airJumps < this.maxAirJumps) {
-        this.vy = -this.jumpForce * 0.9;
-        this.airJumps += 1;
-      }
+    if (this.jumpBufferTimer > 0 && (this.onGround || this.coyoteTimer > 0)) {
+      this.vy = -this.jumpForce;
+      this.coyoteTimer = 0;
+      this.jumpBufferTimer = 0;
+      this.airJumps = 0;
+    } else if (this.jumpBufferTimer > 0 && this.airJumps < this.maxAirJumps) {
+      this.vy = -this.jumpForce * 0.9;
+      this.airJumps += 1;
+      this.jumpBufferTimer = 0;
     }
 
     // Dash
@@ -180,6 +201,13 @@ export class Player extends Entity {
     }
 
     this.step(dt, solids);
+    // actualizar coyote tras step por si acaba de caer
+    if (this.onGround) {
+      this.coyoteTimer = this.coyoteTime;
+      this.airJumps = 0;
+    } else if (this.coyoteTimer > 0) {
+      this.coyoteTimer -= dt;
+    }
 
     if (!this.onGround) this.setAnim('jump');
     else if (Math.abs(this.vx) > 20) this.setAnim('run');
