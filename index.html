@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SIXXPISTOLS | Roguelike Hack & Slash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="game-wrapper">
+    <canvas id="game" width="1024" height="576" aria-label="SIXXPISTOLS Game Canvas"></canvas>
+
+    <!-- HUD -->
+    <div id="hud" class="hud hidden">
+      <div class="hud__top">
+        <div class="hud__group">
+          <div class="hud__label">SALUD</div>
+          <div class="hud__hearts" data-hearts></div>
+          <div class="hud__sub" data-hp-text>5 / 5</div>
+        </div>
+        <div class="hud__group hud__group--center">
+          <div class="hud__label">TIEMPO SALA</div>
+          <div class="hud__timer" data-timer>00:00</div>
+        </div>
+        <div class="hud__group hud__group--right">
+          <div class="hud__label" data-room>SALA 1 · ENTRENAMIENTO</div>
+          <div class="hud__sub" data-kills>ELIMINADOS: 0</div>
+        </div>
+      </div>
+      <div class="hud__bottom">
+        <div class="hud__hint">J / X ATACAR · K / SHIFT DASH · A/D MOVER · ESPACIO SALTAR · ESC PAUSA</div>
+      </div>
+    </div>
+
+    <!-- Menú Principal -->
+    <div id="menu-screen" class="screen">
+      <div class="screen__backdrop"></div>
+      <div class="screen__content screen__content--menu">
+        <div class="logo">
+          <div class="logo__title">SIXXPISTOLS</div>
+          <div class="logo__subtitle">ROGUELIKE · HACK & SLASH · 2D SIDE-SCROLLER</div>
+        </div>
+        <div class="menu">
+          <button class="menu__btn menu__btn--primary" id="btn-start">INICIAR JUEGO</button>
+          <button class="menu__btn" id="btn-instructions">INSTRUCCIONES</button>
+          <button class="menu__btn" id="btn-credits">CRÉDITOS</button>
+          <button class="menu__btn" id="btn-mute">🔊 SONIDO</button>
+        </div>
+        <div class="screen__footer">ENTREGA #4 - FINAL JUEGO | UNIVERSITARIO | INSPIRADO EN HOLLOW KNIGHT</div>
+      </div>
+    </div>
+
+    <!-- Selección de Mejora -->
+    <div id="upgrade-screen" class="screen hidden">
+      <div class="screen__backdrop screen__backdrop--dim"></div>
+      <div class="screen__content">
+        <div class="panel__header">
+          <div class="panel__title">PUERTA DESBLOQUEADA</div>
+          <div class="panel__subtitle">ELIGE UNA MEJORA PARA TU PRÓXIMA SALA</div>
+        </div>
+        <div class="upgrade-grid">
+          <button class="upgrade-card" data-index="0">
+            <div class="upgrade-card__icon">⚔</div>
+            <div class="upgrade-card__title">MEJORA</div>
+            <div class="upgrade-card__desc">DESCRIPCIÓN</div>
+            <div class="upgrade-card__cta">SELECCIONAR</div>
+          </button>
+          <button class="upgrade-card" data-index="1">
+            <div class="upgrade-card__icon">◆</div>
+            <div class="upgrade-card__title">MEJORA</div>
+            <div class="upgrade-card__desc">DESCRIPCIÓN</div>
+            <div class="upgrade-card__cta">SELECCIONAR</div>
+          </button>
+          <button class="upgrade-card" data-index="2">
+            <div class="upgrade-card__icon">○</div>
+            <div class="upgrade-card__title">MEJORA</div>
+            <div class="upgrade-card__desc">DESCRIPCIÓN</div>
+            <div class="upgrade-card__cta">SELECCIONAR</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Over -->
+    <div id="gameover-screen" class="screen hidden">
+      <div class="screen__backdrop screen__backdrop--dark"></div>
+      <div class="screen__content">
+        <div class="panel__header">
+          <div class="panel__title panel__title--danger">GAME OVER</div>
+          <div class="panel__subtitle">HAS CAÍDO EN EL SUBSUELO</div>
+        </div>
+        <div class="stats">
+          <div class="stat"><span>TIEMPO TOTAL</span><span id="go-time">00:00.00</span></div>
+          <div class="stat"><span>SALAS COMPLETADAS</span><span id="go-rooms">0</span></div>
+          <div class="stat"><span>ENEMIGOS ELIMINADOS</span><span id="go-kills">0</span></div>
+          <div class="stat"><span>DAÑO INFLIGIDO</span><span id="go-dmg">0</span></div>
+        </div>
+        <div class="menu">
+          <button class="menu__btn menu__btn--primary" id="btn-retry">REINTENTAR</button>
+          <button class="menu__btn" id="btn-menu">VOLVER AL MENÚ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Victoria -->
+    <div id="victory-screen" class="screen hidden">
+      <div class="screen__backdrop screen__backdrop--dim"></div>
+      <div class="screen__content">
+        <div class="panel__header">
+          <div class="panel__title panel__title--victory">VICTORIA</div>
+          <div class="panel__subtitle">EL JEFE HA SIDO DERROTADO</div>
+        </div>
+        <div class="stats">
+          <div class="stat"><span>TIEMPO TOTAL</span><span id="v-time">00:00.00</span></div>
+          <div class="stat"><span>SALAS COMPLETADAS</span><span id="v-rooms">3</span></div>
+          <div class="stat"><span>ENEMIGOS ELIMINADOS</span><span id="v-kills">0</span></div>
+          <div class="stat"><span>DAÑO INFLIGIDO</span><span id="v-dmg">0</span></div>
+        </div>
+        <div class="menu">
+          <button class="menu__btn menu__btn--primary" id="btn-victory-menu">VOLVER AL MENÚ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pausa -->
+    <div id="pause-screen" class="screen hidden">
+      <div class="screen__backdrop screen__backdrop--dark"></div>
+      <div class="screen__content screen__content--small">
+        <div class="panel__header">
+          <div class="panel__title">PAUSA</div>
+        </div>
+        <div class="menu">
+          <button class="menu__btn menu__btn--primary" id="btn-resume">REANUDAR</button>
+        </div>
+        <div class="screen__footer">ESC / P PARA CONTINUAR</div>
+      </div>
+    </div>
+
+    <!-- Boss Intro -->
+    <div id="boss-intro" class="boss-intro hidden">
+      <div class="boss-intro__text">GUARDIÁN DE HIERRO</div>
+      <div class="boss-intro__sub">SALA 3 · JEFE</div>
+    </div>
+
+    <!-- Controles Táctiles -->
+    <div id="touch-controls" class="touch hidden">
+      <div class="touch__left">
+        <button class="touch__btn" data-action="left">◀</button>
+        <button class="touch__btn" data-action="right">▶</button>
+      </div>
+      <div class="touch__right">
+        <button class="touch__btn touch__btn--jump" data-action="jump">▲</button>
+        <button class="touch__btn" data-action="attack">⚔</button>
+        <button class="touch__btn" data-action="dash">»</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
