@@ -45,11 +45,9 @@ Abre `http://localhost:8000`. Para generar el paquete publicable en `dist/`:
 npm run build
 ```
 
-## Publicación automática
+## Publicación automática en Vercel
 
-El proyecto funciona en Vercel y GitHub Pages. `vercel.json` configura el comando `npm run build` y la carpeta de salida `dist`; con la integración de GitHub activada en Vercel, cada push a `main` genera un nuevo despliegue. El empaquetador incluye `assets/` si existe, así que una carpeta vacía no rompe el build.
-
-El workflow `.github/workflows/deploy-pages.yml` también permite publicar con GitHub Pages. Para usar Pages, entra en **Settings → Pages** y selecciona **GitHub Actions** como fuente. Después, cada push a `main` actualizará el sitio. La dirección Pages será `https://andreseA2605.github.io/SIXXpistols/`.
+`vercel.json` configura el comando `npm run build` y la carpeta de salida `dist`. Con la integración de GitHub activada en Vercel, cada push a `main` genera un nuevo despliegue. El empaquetador incluye `assets/` si existe, así que una carpeta vacía no rompe el build.
 
 ## Estructura
 
